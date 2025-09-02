@@ -17,7 +17,8 @@ export default function AdminPage() {
   }, []);
 
   const loadPosts = async () => {
-    const res = await axios.get(process.env.NEXT_PUBLIC_API_URL)
+    const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/posts`);
+
     const fetchedPosts = res.data
     if (fetchedPosts) setPosts(fetchedPosts);
   };

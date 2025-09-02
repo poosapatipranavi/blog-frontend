@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
 import { Post } from './AdminPostCard';
@@ -19,9 +20,9 @@ export default function PostModal({ isOpen, onClose, onSave, post }: PostModalPr
   useEffect(() => {
     if (isOpen) {
       if (post) {
-        setTitle(post.title);
-        setContent(post.content);
-        setAuthorName(post.authorName || '');
+        setTitle(post.title ?? '');
+        setContent(post.content ?? '');
+        setAuthorName(post.author ?? ''); // backend expects "author"
       } else {
         setTitle('');
         setContent('');
@@ -35,7 +36,7 @@ export default function PostModal({ isOpen, onClose, onSave, post }: PostModalPr
 
   const validate = () => {
     const newErrors: typeof errors = {};
-    if (title.trim().length < 3) newErrors.title = "Title must be at least 4 characters.";
+    if (title.trim().length < 4) newErrors.title = "Title must be at least 4 characters.";
     if (authorName.trim().length < 4) newErrors.authorName = "Author name must be at least 4 characters.";
     if (content.trim().length < 4) newErrors.content = "Content must be at least 4 characters.";
     setErrors(newErrors);
@@ -43,27 +44,33 @@ export default function PostModal({ isOpen, onClose, onSave, post }: PostModalPr
   };
 
   const handleSave = async () => {
-    if (!validate()) return; 
+    if (!validate()) return;
 
-    const newPost = { title, content, authorName };
+    // ✅ match backend schema: send "author" not "authorName"
+    const newPost = { title, content, author: authorName };
 
     try {
-      const res = await fetch(!post ? `${API_URL}/blogs` : `${API_URL}/blogs/${post._id}`, {
-        method: post ? "PATCH" : "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(newPost),
-      });
+      const res = await fetch(
+        post ? `${API_URL}/posts/${post._id}` : `${API_URL}/posts`,
+        {
+          method: post ? "PATCH" : "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(newPost),
+        }
+      );
 
       if (res.ok) {
         const savedPost = await res.json();
         onSave(savedPost);
         onClose();
       } else {
-        console.error('Failed to save post:', await res.text());
+        const errMsg = await res.text();
+        console.error('Failed to save post:', errMsg);
+        alert(errMsg || "Failed to save post");
       }
-    } catch (error: any) {
-      alert(error?.response?.data?.message || "Error saving post");
+    } catch (error) {
       console.error('Error saving post:', error);
+      alert("Network error: Could not save post");
     }
   };
 
