@@ -14,6 +14,7 @@ export default function PostModal({ isOpen, onClose, onSave, post }: PostModalPr
   const [content, setContent] = useState('');
   const [authorName, setAuthorName] = useState('');
   const [errors, setErrors] = useState<{ title?: string; authorName?: string; content?: string }>({});
+  const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
   useEffect(() => {
     if (isOpen) {
@@ -47,7 +48,7 @@ export default function PostModal({ isOpen, onClose, onSave, post }: PostModalPr
     const newPost = { title, content, authorName };
 
     try {
-      const res = await fetch(!post ? "http://localhost:3002/posts" : `http://localhost:3002/posts/${post._id}`, {
+      const res = await fetch(!post ? `${API_URL}/blogs` : `${API_URL}/blogs/${post._id}`, {
         method: post ? "PATCH" : "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(newPost),
