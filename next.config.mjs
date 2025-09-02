@@ -1,7 +1,16 @@
 /** @type {import('next').NextConfig} */
 const config = {
-  // your config options will be the same
+
   reactStrictMode: true, 
 };
+const nextConfig = {
+  eslint: {
+    ignoreDuringBuilds:true,
+  },
+  typescript: {
+    ignoreBuildErrors: true,
+  },
+};
+//module.exports = nextConfig;
 
 export default config;
