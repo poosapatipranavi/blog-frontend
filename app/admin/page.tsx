@@ -17,11 +17,11 @@ export default function AdminPage() {
   }, []);
 
   const loadPosts = async () => {
-    const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/posts`);
+  const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/posts`);
+  const fetchedPosts = res.data;
+  if (fetchedPosts) setPosts(fetchedPosts);
+};
 
-    const fetchedPosts = res.data
-    if (fetchedPosts) setPosts(fetchedPosts);
-  };
 
   const handleOpenModal = (post: Post | null = null) => {
     setEditingPost(post);

@@ -4,7 +4,7 @@ export interface Post {
   _id: string;
   title: string;
   content: string;
-  authorName: string;
+  author: string;
   createdAt: string;
 }
 
@@ -29,7 +29,7 @@ export default function AdminPostCard({ post, onDelete, onEdit }: AdminPostCardP
       <div className="p-6">
         <p className="text-gray-600 mb-4 line-clamp-3">{post.content}</p>
         <div className="flex justify-between items-center text-sm text-gray-500">
-          <span>By {post.authorName || 'Anonymous'}</span>
+          <span>By {post.author|| 'Anonymous'}</span>
           <span>{new Date(post.createdAt).toLocaleDateString()}</span>
         </div>
       </div>

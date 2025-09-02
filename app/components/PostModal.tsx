@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
 import { Post } from './AdminPostCard';
@@ -22,7 +21,7 @@ export default function PostModal({ isOpen, onClose, onSave, post }: PostModalPr
       if (post) {
         setTitle(post.title ?? '');
         setContent(post.content ?? '');
-        setAuthorName(post.author ?? ''); // backend expects "author"
+        setAuthorName(post.author ?? ''); // ✅ backend expects "author"
       } else {
         setTitle('');
         setContent('');
@@ -46,7 +45,7 @@ export default function PostModal({ isOpen, onClose, onSave, post }: PostModalPr
   const handleSave = async () => {
     if (!validate()) return;
 
-    // ✅ match backend schema: send "author" not "authorName"
+    // ✅ send "author" not "authorName"
     const newPost = { title, content, author: authorName };
 
     try {
