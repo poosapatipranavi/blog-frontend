@@ -14,6 +14,7 @@ export default function PostModal({ isOpen, onClose, onSave, post }: PostModalPr
   const [content, setContent] = useState('');
   const [authorName, setAuthorName] = useState('');
   const [errors, setErrors] = useState<{ title?: string; authorName?: string; content?: string }>({});
+  const [errorMsg, setErrorMsg] = useState("")
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
   useEffect(() => {
@@ -21,7 +22,7 @@ export default function PostModal({ isOpen, onClose, onSave, post }: PostModalPr
       if (post) {
         setTitle(post.title ?? '');
         setContent(post.content ?? '');
-        setAuthorName(post.author ?? ''); // ✅ backend expects "author"
+        setAuthorName(post.authorName ?? ''); // ✅ backend expects "author"
       } else {
         setTitle('');
         setContent('');
@@ -65,11 +66,11 @@ export default function PostModal({ isOpen, onClose, onSave, post }: PostModalPr
       } else {
         const errMsg = await res.text();
         console.error('Failed to save post:', errMsg);
-        alert(errMsg || "Failed to save post");
       }
     } catch (error) {
       console.error('Error saving post:', error);
-      alert("Network error: Could not save post");
+      // alert("Network error: Could not save post");
+      setErrorMsg(error.response.data.message)
     }
   };
 
@@ -119,6 +120,7 @@ export default function PostModal({ isOpen, onClose, onSave, post }: PostModalPr
             ></textarea>
             {errors.content && <p className="text-red-500 text-sm">{errors.content}</p>}
           </div>
+          {errorMsg}
         </div>
         <div className="flex justify-end space-x-4 mt-8">
           <button
