@@ -46,7 +46,7 @@ export default function PostModal({ isOpen, onClose, onSave, post }: PostModalPr
     if (!validate()) return;
 
     // ✅ send "author" not "authorName"
-    const newPost = { title, content, author: authorName };
+    const newPost = { title, content, authorName };
 
     try {
       const res = await fetch(
